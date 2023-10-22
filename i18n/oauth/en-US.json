@@ -1,0 +1,8 @@
+{
+  "SUCCESS_INSERT_MESSAGE": "Data country successfully inserted",
+  "SUCCESS_UPDATE_MESSAGE": "Data country successfully updated",
+  "SUCCESS_DELETE_MESSAGE": "Data country successfully deleted",
+  "SUCCESS_LIST_MESSAGE": "Successfully get list of country",
+  "SUCCESS_VIEW_MESSAGE": "Successfully get country",
+  "SUCCESS_INITIATE_LIST_MESSAGE": "Successfully get initiate list country"
+}

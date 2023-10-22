@@ -1,0 +1,5 @@
+{
+  "E-1-AUT-SRV-001": "Unauthorized Client",
+  "E-1-AUT-SRV-002": "username and password invalid",
+  "E-1-AUT-SRV-003": "Expired session, please log back in"
+}

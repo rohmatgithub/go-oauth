@@ -1,0 +1,5 @@
+{
+  "E-1-AUT-SRV-001": "Akses client tidak diizinkan",
+  "E-1-AUT-SRV-002": "username dan password tidak valid",
+  "E-1-AUT-SRV-003": "Session telah berakhir, silahkan login kembali"
+}

@@ -1,0 +1,8 @@
+{
+  "SUCCESS_INSERT_MESSAGE": "Data negara berhasil ditambahkan",
+  "SUCCESS_UPDATE_MESSAGE": "Data negara berhasil diubah",
+  "SUCCESS_DELETE_MESSAGE": "Data negara berhasil dihapus",
+  "SUCCESS_LIST_MESSAGE": "Pengambilan daftar negara berhasil dilakukan",
+  "SUCCESS_VIEW_MESSAGE": "Pengambilan data negara berhasil dilakukan",
+  "SUCCESS_INITIATE_LIST_MESSAGE": "Pengambilan data inisiasi daftar negara berhasil dilakukan"
+}
