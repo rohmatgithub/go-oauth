@@ -14,7 +14,6 @@ type Configuration interface {
 	GetPostgresqlConfig() Postgresql
 	GetPostgresqlViewConfig() PostgresqlView
 	GetRedisConfig() Redis
-	GetLogFile() []string
 	GetLanguageDirectoryPath() string
 	GetSqlMigrateDirPath() string
 	GetFileResourceDir() DirFileResource

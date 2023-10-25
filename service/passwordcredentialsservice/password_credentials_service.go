@@ -1,11 +1,11 @@
 package passwordcredentialsservice
 
 import (
-	"go-oauth/common"
+	"go-oauth/service"
 )
 
 var PasswordCredentialsService = passwordCredentialsService{}
 
 type passwordCredentialsService struct {
-	common.AbstractStruct
+	service.AbstractService
 }

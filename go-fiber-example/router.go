@@ -1,10 +1,13 @@
 package go_fiber_example
 
 import (
+	"context"
 	"encoding/json"
 	"errors"
 	"fmt"
 	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v2/middleware/adaptor"
+	"go-oauth/constanta"
 	"io"
 	"log"
 	"net/http/httptest"
@@ -53,19 +56,6 @@ func startTest(app *fiber.App) {
 		return fiber.NewError(782, "Value cannot empty")
 	}).Name("test-error")
 
-	// Match any request
-	// redirect example
-	app.Use(func(c *fiber.Ctx) error {
-		//fmt.Println("masuk middleware")
-		url := c.OriginalURL()
-		if strings.Contains(url, "//") {
-			fmt.Println("masuk redirect")
-			url = strings.ReplaceAll(url, "//", "/")
-			return c.Redirect(url)
-		}
-		return c.Next()
-	})
-
 	app.Get("/getstack/:routeName?", func(c *fiber.Ctx) error {
 		var data []byte
 		routeName := c.Params("routeName")
@@ -83,6 +73,29 @@ func startTest(app *fiber.App) {
 	//	fmt.Println("masuk middleware")
 	//	return c.Next()
 	//})
+
+	app.Get("/testcontext", func(ctx *fiber.Ctx) error {
+		strCtx := ctx.Context().Value(constanta.ApplicationContextConstanta).(*string)
+		fmt.Println("--> ", strCtx)
+		return ctx.SendString("berhasil test")
+	})
+	// Match any request
+	// redirect example
+	app.Use(func(c *fiber.Ctx) error {
+		fmt.Println("masuk middleware")
+		url := c.OriginalURL()
+		if strings.Contains(url, "//") {
+			fmt.Println("masuk redirect")
+			url = strings.ReplaceAll(url, "//", "/")
+			return c.Redirect(url)
+		}
+
+		// ==== TEST SET CONTEXT ====
+		str := "test-context"
+		ctx := context.WithValue(c.Context(), constanta.ApplicationContextConstanta, &str)
+		adaptor.CopyContextToFiberContext(ctx, c.Context())
+		return c.Next()
+	})
 }
 
 func routerTest(app *fiber.App) {

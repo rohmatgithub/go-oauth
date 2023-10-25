@@ -2,7 +2,11 @@
 
 -- +migrate StatementBegin
 
+DO $$ BEGIN
 CREATE TYPE locale_language AS ENUM ('en-US', 'id-ID');
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 -- CREATE TYPE grant_types AS ENUM ('code', 'code_pkce', 'token', 'password', 'client_credentials');
 
 CREATE TABLE IF NOT EXISTS users
@@ -25,7 +29,7 @@ CREATE TABLE IF NOT EXISTS users
 
 CREATE TABLE IF NOT EXISTS auth_client
 (
-    client_id		VARCHAR(256) PRIMAY_KEY,
+    client_id		VARCHAR(256) PRIMARY KEY,
     client_secret	VARCHAR(256) NOT NULL,
     secret_key		VARCHAR(256) NOT NULL,
     grant_type		VARCHAR(50) NOT NULL,
@@ -108,8 +112,8 @@ CREATE TABLE IF NOT EXISTS user_verification
     );
 
 INSERT INTO users
-(username, "password", salt)
+(username, "password", salt, client_id)
 VALUES
-    ('admin', 'abc954ec4bd81efa9fd6b9250b54a62e19758a4ee40435cf8f849847e838a3356e473b8e9380dfaa3f2c5f51eb466009a87b8192ff1a70340fb5027bc2e18e76', '32bd68cc58b542ed8f44bc42d8c68083')
+    ('admin', 'abc954ec4bd81efa9fd6b9250b54a62e19758a4ee40435cf8f849847e838a3356e473b8e9380dfaa3f2c5f51eb466009a87b8192ff1a70340fb5027bc2e18e76', '32bd68cc58b542ed8f44bc42d8c68083', 'b789a2c2f2f14e3085f556fc9de7da2a')
     ON CONFLICT(username) DO NOTHING;
 -- +migrate StatementEnd

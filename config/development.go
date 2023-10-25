@@ -6,7 +6,6 @@ type DevelopmentConfig struct {
 	Postgresql            Postgresql      `json:"postgresql"`
 	PostgresqlView        PostgresqlView  `json:"postgresql_view"`
 	Redis                 Redis           `json:"redis"`
-	LogFile               []string        `json:"log_file"`
 	LanguageDirectoryPath string          `json:"language_directory_path"`
 	SqlMigrateDirPath     string          `json:"sql_migrate_dir_path"`
 	DirFileResource       DirFileResource `json:"dir_file_resource"`
@@ -28,10 +27,6 @@ func (input DevelopmentConfig) GetPostgresqlViewConfig() PostgresqlView {
 
 func (input DevelopmentConfig) GetRedisConfig() Redis {
 	return input.Redis
-}
-
-func (input DevelopmentConfig) GetLogFile() []string {
-	return input.LogFile
 }
 
 func (input DevelopmentConfig) GetLanguageDirectoryPath() string {

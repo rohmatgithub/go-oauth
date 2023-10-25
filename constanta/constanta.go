@@ -3,12 +3,13 @@ package constanta
 import "time"
 
 // ======== LOG CONSTANTA
-const LogLevelNotSet = 0
-const LogLevelDebug = 10
-const LogLevelInfo = 20
-const LogLevelWarn = 30
-const LogLevelError = 40
-const LogLevelCritical = 50
+const LogLevelTrace = 0
+const LogLevelDebug = 1
+const LogLevelInfo = 2
+const LogLevelWarn = 3
+const LogLevelError = 4
+const LogLevelFata = 5
+const LogLevelPanic = 6
 
 // --------------------------- Header Request Constanta ------------------------------------
 const RequestIDConstanta = "X-Request-ID"

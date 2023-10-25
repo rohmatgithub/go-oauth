@@ -35,10 +35,6 @@
     "error_percent_threshold": 5,
     "max_concurrent_requests": 10
   },
-  "log_file": [
-    "new_struct.log",
-    "stdout"
-  ],
   "language_directory_path": "../go-oauth/i18n",
   "sql_migrate_dir_path": "../go-oauth/sql_migrations",
   "dir_file_resource": {

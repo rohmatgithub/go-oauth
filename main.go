@@ -16,13 +16,11 @@ func main() {
 	}
 
 	config.GenerateConfiguration(arguments)
-	common.SetLoggerServer(config.ApplicationConfiguration.GetLogFile())
 	err := common.SetServerAttribute()
 	if err != nil {
 		fmt.Println("ERROR common server attribute : ", err)
 		os.Exit(3)
 	}
-
 	err = common.MigrateSchema(common.ConnectionDB, config.ApplicationConfiguration.GetSqlMigrateDirPath(), config.ApplicationConfiguration.GetPostgresqlConfig().DefaultSchema)
 	if err != nil {
 		fmt.Println("ERROR migrate sql : ", err)

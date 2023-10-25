@@ -5,12 +5,12 @@ go 1.20
 require (
 	github.com/cespare/xxhash/v2 v2.2.0
 	github.com/gobuffalo/packr/v2 v2.8.3
+	github.com/goccy/go-json v0.10.2
 	github.com/gofiber/fiber/v2 v2.50.0
 	github.com/lib/pq v1.10.9
 	github.com/rubenv/sql-migrate v1.5.2
 	github.com/stretchr/testify v1.8.1
 	github.com/tkanos/gonfig v0.0.0-20210106201359-53e13348de2f
-	go.uber.org/zap v1.26.0
 	gorm.io/driver/postgres v1.5.2
 	gorm.io/gorm v1.25.4
 )
@@ -43,7 +43,6 @@ require (
 	github.com/valyala/bytebufferpool v1.0.0 // indirect
 	github.com/valyala/fasthttp v1.50.0 // indirect
 	github.com/valyala/tcplisten v1.0.0 // indirect
-	go.uber.org/multierr v1.10.0 // indirect
 	golang.org/x/crypto v0.8.0 // indirect
 	golang.org/x/sys v0.13.0 // indirect
 	golang.org/x/term v0.7.0 // indirect

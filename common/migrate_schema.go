@@ -4,16 +4,16 @@ import (
 	"database/sql"
 	"errors"
 	"github.com/gobuffalo/packr/v2"
+	"github.com/gofiber/fiber/v2/log"
 	migrate "github.com/rubenv/sql-migrate"
 	"go-oauth/config"
-	"go-oauth/constanta"
 	"reflect"
 	"strconv"
 	"strings"
 )
 
 func MigrateSchema(db *sql.DB, pathFile string, schemaName string) error {
-	class := "[MigrateSql.go,MigrateSchema]"
+	//class := "[MigrateSql.go,MigrateSchema]"
 	migrations := &migrate.PackrMigrationSource{
 		Box: packr.New("migrations_"+schemaName, pathFile),
 	}
@@ -32,11 +32,15 @@ func MigrateSchema(db *sql.DB, pathFile string, schemaName string) error {
 		splitData := strings.Split(resolution.ResolutionDir, "\\")
 		SQLMigrationResolutionDir = strings.Join(splitData[0:len(splitData)-1], "\\")
 	}
-	logModel := GenerateLogModel(config.ApplicationConfiguration.GetServerConfig().Version, config.ApplicationConfiguration.GetServerConfig().ResourceID)
-	logModel.Status = 200
-	logModel.Class = class
-	logModel.Message = "Applied " + strconv.Itoa(n) + " migrations!"
-	PrintLogWithLevel(constanta.LogLevelInfo, logModel)
+	logModel := LoggerModel{
+		Status: 200,
+		//Class:    class,
+		Message:  "Applied " + strconv.Itoa(n) + " migrations!",
+		Version:  config.ApplicationConfiguration.GetServerConfig().Version,
+		Resource: config.ApplicationConfiguration.GetServerConfig().ResourceID,
+	}
+
+	log.Info(GenerateLogModel(logModel))
 
 	return nil
 }

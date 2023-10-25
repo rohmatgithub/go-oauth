@@ -5,3 +5,5 @@ go.sum
 curl
 
 new_struct.log
+
+fiber.log
