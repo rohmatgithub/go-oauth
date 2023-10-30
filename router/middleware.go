@@ -14,7 +14,6 @@ import (
 )
 
 func middleware(c *fiber.Ctx) error {
-	fmt.Println("middleware free :", c.Response().StatusCode())
 	logModel := &common.LoggerModel{
 		Pid:         strconv.Itoa(os.Getpid()),
 		RequestID:   c.Locals("requestid").(string),
@@ -41,4 +40,14 @@ func middleware(c *fiber.Ctx) error {
 func NotFoundHandler(c *fiber.Ctx) error {
 	// Customize the response for the 404 error
 	return c.Status(fiber.StatusNotFound).SendString("404 Not Found")
+}
+
+func customErrorHandler(c *fiber.Ctx, err error) {
+	// Handle the error here
+	fmt.Printf("Error: %v\n", err)
+
+	// Return a custom error response
+	c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+		"error": "Something went wrong",
+	})
 }

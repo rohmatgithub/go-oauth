@@ -1,18 +1,25 @@
 package repository
 
-import "time"
+import (
+	"database/sql"
+)
 
 type AbstractModel struct {
-	CreatedBy int
-	UpdatedBy int
-	CreatedAt time.Time
-	UpdatedAt time.Time
+	CreatedBy sql.NullInt64
+	UpdatedBy sql.NullInt64
+	CreatedAt sql.NullTime
+	UpdatedAt sql.NullTime
 }
 type AuthClient struct {
-	ClientID     string `gorm:"primaryKey"`
-	ClientSecret string
-	SecretKey    string
-	GrantType    string
-	RedirectUri  string
+	ClientID       sql.NullString `gorm:"primaryKey"`
+	ClientSecret   sql.NullString
+	SecretKey      sql.NullString
+	GrantType      sql.NullString
+	RedirectUri    sql.NullString
+	ClientResource []ClientResource `gorm:"foreignKey:ClientID"`
 	AbstractModel
+}
+
+func (AuthClient) TableName() string {
+	return "auth_client"
 }

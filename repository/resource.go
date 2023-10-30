@@ -1,7 +1,9 @@
 package repository
 
+import "database/sql"
+
 type Resource struct {
-	ResourceID  string `gorm:"primaryKey"`
-	Description string
+	ResourceID  sql.NullString `gorm:"primaryKey"`
+	Description sql.NullString
 	AbstractModel
 }

@@ -33,15 +33,15 @@ func GenerateInvalidRequestError(causedBy error) ErrorModel {
 
 // ====================== ERROR SERVICE  ===================
 
-func GenerateUnauthorizedClientError(fileName string, funcName string) ErrorModel {
+func GenerateUnauthorizedClientError() ErrorModel {
 	return GenerateErrorModel(401, "E-1-AUT-SRV-001", nil)
 }
 
-func GenerateVerifyPasswordInvalidError(fileName string, funcName string) ErrorModel {
+func GenerateVerifyPasswordInvalidError() ErrorModel {
 	return GenerateErrorModel(401, "E-1-AUT-SRV-002", nil)
 }
 
-func GenerateExpiredTokenError(fileName string, funcName string) ErrorModel {
+func GenerateExpiredTokenError() ErrorModel {
 	return GenerateErrorModel(401, "E-1-AUT-SRV-003", nil)
 }
 

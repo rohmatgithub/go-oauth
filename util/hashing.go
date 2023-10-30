@@ -7,7 +7,9 @@ import (
 	"crypto/sha512"
 	"encoding/hex"
 	"github.com/cespare/xxhash/v2"
+	"github.com/google/uuid"
 	"strconv"
+	"strings"
 )
 
 func CheckSumWithXXHASH(content []byte) (checksum string) {
@@ -44,4 +46,11 @@ func HashingPassword(password string, salt string) string {
 
 func CheckIsPasswordMatch(passwordInput string, passwordDB string, salt string) bool {
 	return HashingPassword(passwordInput, salt) == passwordDB
+}
+
+func GetUUID() (output string) {
+	UUID, _ := uuid.NewRandom()
+	output = UUID.String()
+	output = strings.Replace(output, "-", "", -1)
+	return
 }

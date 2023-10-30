@@ -2,7 +2,10 @@ package common
 
 import (
 	"database/sql"
+	"fmt"
 	"github.com/gofiber/fiber/v2/log"
+	"github.com/redis/go-redis/v9"
+	"go-oauth/config"
 	"gorm.io/gorm"
 	"io"
 	"os"
@@ -12,6 +15,7 @@ var (
 	ConnectionDB              *sql.DB
 	GormDB                    *gorm.DB
 	SQLMigrationResolutionDir string
+	RedisClient               *redis.Client
 )
 
 //type logWriter struct {
@@ -33,5 +37,12 @@ func SetServerAttribute() error {
 	file, _ := os.OpenFile("fiber.log", os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0666)
 	iw := io.MultiWriter(os.Stdout, file)
 	log.SetOutput(iw)
+
+	// CONNECT REDIS
+	RedisClient = redis.NewClient(&redis.Options{
+		Addr:     fmt.Sprintf("%s:%d", config.ApplicationConfiguration.GetRedisConfig().Host, config.ApplicationConfiguration.GetRedisConfig().Port),
+		Password: config.ApplicationConfiguration.GetRedisConfig().Password, // no password set
+		DB:       config.ApplicationConfiguration.GetRedisConfig().Db,       // use default DB
+	})
 	return nil
 }

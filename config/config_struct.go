@@ -77,9 +77,7 @@ type Discord struct {
 }
 
 type Jwt struct {
-	CodeKey          string `json:"code_key" envconfig:"$(AUTH_JWT_CODE_KEY)"`
-	TokenKey         string `json:"token_key" envconfig:"$(AUTH_JWT_TOKEN_KEY)"`
-	TokenInternalKey string `json:"token_internal_key" envconfig:"$(AUTH_JWT_TOKEN_INTERNAL_KEY)"`
+	TokenKey string `json:"token_key" envconfig:"$(AUTH_JWT_TOKEN_KEY)"`
 }
 
 func GenerateConfiguration(arguments string) {

@@ -51,8 +51,6 @@
     "channel_id": "1083057993739927632"
   },
   "jwt": {
-    "code_key": "key yang tidak di encrypt",
-    "token_key": "ini juga gak di encrypt",
-    "token_internal_key": "apalagi ini gak di encrypt"
+    "token_key": "ini juga gak di encrypt"
   }
 }

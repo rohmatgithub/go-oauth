@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"github.com/goccy/go-json"
 	"github.com/gofiber/fiber/v2"
-	recoverfiber "github.com/gofiber/fiber/v2/middleware/recover"
 	"github.com/gofiber/fiber/v2/middleware/requestid"
 	"go-oauth/config"
 )
@@ -21,7 +20,16 @@ func Router() error {
 		JSONDecoder:   json.Unmarshal,
 	})
 	app.Use(requestid.New())
-	app.Use(recoverfiber.New())
+	//app.Use(recoverfiber.New())
+	app.Use(func(c *fiber.Ctx) error {
+		defer func() {
+			if r := recover(); r != nil {
+				fmt.Println(r)
+				customErrorHandler(c, fmt.Errorf("%v", r))
+			}
+		}()
+		return c.Next()
+	})
 	app.Use(middleware)
 	//file, err := os.OpenFile("fiber.log", os.O_RDWR|os.O_CREATE|os.O_APPEND, 0666)
 	//if err != nil {
@@ -36,7 +44,8 @@ func Router() error {
 	//	Output:     iw,
 	//}))
 
-	credentialsRouter(app)
+	v1 := app.Group("/v1/oauth")
+	credentialsRouter(v1)
 	app.Use(NotFoundHandler)
 	return app.Listen(fmt.Sprintf(":%d", config.ApplicationConfiguration.GetServerConfig().Port))
 }
