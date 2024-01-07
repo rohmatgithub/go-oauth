@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"fmt"
 	"github.com/gofiber/fiber/v2/log"
+	"github.com/nicksnyder/go-i18n/v2/i18n"
 	"github.com/redis/go-redis/v9"
 	"go-oauth/config"
 	"gorm.io/gorm"
@@ -16,6 +17,8 @@ var (
 	GormDB                    *gorm.DB
 	SQLMigrationResolutionDir string
 	RedisClient               *redis.Client
+	ErrorBundle               *i18n.Bundle
+	ConstantaBundle           *i18n.Bundle
 )
 
 //type logWriter struct {

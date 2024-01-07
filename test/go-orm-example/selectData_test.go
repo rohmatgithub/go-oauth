@@ -1,6 +1,7 @@
 package go_orm_example
 
 import (
+	"fmt"
 	"github.com/stretchr/testify/assert"
 	go_orm_example "go-oauth/go-orm-example"
 	"gorm.io/gorm/clause"
@@ -18,11 +19,16 @@ func TestSelect(t *testing.T) {
 	}
 
 	var repo go_orm_example.Categories
-	result := db.Where("code = $1", categories.Code).Find(&repo)
-	if result.Error != nil {
-		t.Fatal(err)
-	}
+	_ = db.
+		//Where("code = $1", categories.Code).
+		Raw("SELECT code, name FROM categories WHERE code = $1", categories.Code).Row().Scan(
+		&repo.Code, &repo.Name)
+	//Find(&repo)
+	//if result.Error != nil {
+	//	t.Fatal(err)
+	//}
 
+	fmt.Println(repo)
 	assert.Equal(t, true, repo.ID > 0)
 }
 

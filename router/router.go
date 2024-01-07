@@ -4,8 +4,10 @@ import (
 	"fmt"
 	"github.com/goccy/go-json"
 	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v2/middleware/cors"
 	"github.com/gofiber/fiber/v2/middleware/requestid"
 	"go-oauth/config"
+	"go-oauth/endpoint"
 )
 
 func Router() error {
@@ -20,6 +22,9 @@ func Router() error {
 		JSONDecoder:   json.Unmarshal,
 	})
 	app.Use(requestid.New())
+	app.Use(cors.New(cors.Config{
+		AllowOrigins: "http://localhost:3000",
+	}))
 	//app.Use(recoverfiber.New())
 	app.Use(func(c *fiber.Ctx) error {
 		defer func() {
@@ -44,8 +49,11 @@ func Router() error {
 	//	Output:     iw,
 	//}))
 
-	v1 := app.Group("/v1/oauth")
-	credentialsRouter(v1)
+	oauth := app.Group("/v1/oauth")
+	credentialsRouter(oauth)
+
+	master := app.Group("/v1/master", endpoint.MiddlewareOtherService)
+	masterDataRouter(master)
 	app.Use(NotFoundHandler)
 	return app.Listen(fmt.Sprintf(":%d", config.ApplicationConfiguration.GetServerConfig().Port))
 }

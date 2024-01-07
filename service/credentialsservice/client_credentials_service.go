@@ -60,6 +60,7 @@ func (cs credentialsService) ClientCredentialsService(c *fiber.Ctx, _ *common.Co
 			ClientID: repo.ClientID.String,
 			Scope:    "",
 			Locale:   "en-US",
+			Valid:    true,
 			RegisteredClaims: jwt.RegisteredClaims{
 				IssuedAt:  jwt.NewNumericDate(time.Now()),
 				ExpiresAt: jwt.NewNumericDate(expJwtCode),

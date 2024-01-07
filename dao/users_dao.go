@@ -2,6 +2,7 @@ package dao
 
 import (
 	"database/sql"
+	"errors"
 	"go-oauth/common"
 	"go-oauth/model"
 	"go-oauth/repository"
@@ -32,7 +33,7 @@ func (usersDao) GetDataByUsername(username string, resourceID string) (result re
 		Scan(&result.ID, &result.Password, &result.Salt, &result.ClientID,
 			&result.AuthClient.SecretKey, &result.AuthClient.GrantType, &result.ClientResource.ResourceID,
 			&result.ClientResource.Authorities, &result.Phone, &result.Locale)
-	if err != nil {
+	if err != nil && !errors.Is(err, sql.ErrNoRows) {
 		errMdl = model.GenerateInternalDBServerError(err)
 	}
 	return

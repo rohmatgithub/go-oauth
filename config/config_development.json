@@ -5,7 +5,7 @@
     "auto_add_host": true,
     "auto_add_client": true,
     "host": "0.0.0.0",
-    "port": 9099,
+    "port": 9091,
     "version": "1.0.0",
     "resource_id": "auth",
     "prefix_path": "oauth",

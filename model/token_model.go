@@ -4,6 +4,8 @@ import (
 	"errors"
 	"github.com/golang-jwt/jwt/v5"
 	"go-oauth/config"
+	"go-oauth/constanta"
+	"time"
 )
 
 type PayloadJWTToken struct {
@@ -17,6 +19,7 @@ type PayloadTokenInternal struct {
 	Scope    string `json:"scope"`
 	Locale   string `json:"locale"`
 	ClientID string `json:"client_id"`
+	Valid    bool   `json:"valid"`
 	jwt.RegisteredClaims
 }
 
@@ -53,19 +56,40 @@ func (input JWTToken) ParsingJwtTokenInternal(jwtTokenStr string) (result Payloa
 	return
 }
 
-func (input JWTToken) ParsingJwtToken(jwtTokenStr string, key string) (result PayloadJWTToken, errMdl ErrorModel) {
+func (input JWTToken) ParsingJwtToken(jwtTokenStr string) (result PayloadJWTToken, errMdl ErrorModel) {
 	token, err := jwt.ParseWithClaims(jwtTokenStr, &PayloadJWTToken{}, func(token *jwt.Token) (interface{}, error) {
-		return []byte(key), nil
+		return []byte(config.ApplicationConfiguration.GetJwtConfig().TokenKey), nil
 	})
 	if err != nil {
 		if errors.Is(err, jwt.ErrTokenExpired) {
 			errMdl = GenerateExpiredTokenError()
 			return
 		}
-		errMdl = GenerateUnknownError(err)
+		errMdl = GenerateUnauthorizedClientError()
 		return
 	}
 
 	result = *token.Claims.(*PayloadJWTToken)
 	return
+}
+
+func GetTokenInternal() (string, ErrorModel) {
+	expJwtCode := time.Now().Add(constanta.ExpiredJWTCodeConstanta)
+	jwtToken, errMdl := JWTToken{}.GenerateToken(
+		PayloadTokenInternal{
+			ClientID: "",
+			Scope:    "",
+			Locale:   "en-US",
+			Valid:    true,
+			RegisteredClaims: jwt.RegisteredClaims{
+				IssuedAt:  jwt.NewNumericDate(time.Now()),
+				ExpiresAt: jwt.NewNumericDate(expJwtCode),
+				Issuer:    "auth",
+			},
+		})
+	if errMdl.Error != nil {
+		return "", errMdl
+	}
+
+	return jwtToken, ErrorModel{}
 }
