@@ -3,13 +3,15 @@ package main
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/gofiber/fiber/v2/log"
-	"github.com/nicksnyder/go-i18n/v2/i18n"
 	"go-oauth/common"
 	"go-oauth/config"
+	"go-oauth/dto"
 	"go-oauth/router"
-	"golang.org/x/text/language"
 	"os"
+
+	"github.com/gofiber/fiber/v2/log"
+	"github.com/nicksnyder/go-i18n/v2/i18n"
+	"golang.org/x/text/language"
 )
 
 func main() {
@@ -25,6 +27,9 @@ func main() {
 		fmt.Println("ERROR common server attribute : ", err)
 		os.Exit(3)
 	}
+
+	common.Validation = common.NewGoValidator()
+	dto.GenerateValidOperator()
 	loadBundleI18N()
 	err = common.MigrateSchema(common.ConnectionDB, config.ApplicationConfiguration.GetSqlMigrateDirPath(), config.ApplicationConfiguration.GetPostgresqlConfig().DefaultSchema)
 	if err != nil {

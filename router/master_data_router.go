@@ -2,24 +2,23 @@ package router
 
 import (
 	"bytes"
-	"github.com/gofiber/fiber/v2"
-	"go-oauth/model"
+	"go-oauth/config"
+	"go-oauth/constanta"
 	"net/http"
+
+	"github.com/gofiber/fiber/v2"
 )
 
 func masterDataRouter(app fiber.Router) {
 	app.Get("/*", func(c *fiber.Ctx) error {
-		req, err := http.NewRequest("GET", "http://localhost:9092"+c.OriginalURL(), nil)
+
+		req, err := http.NewRequest("GET", config.ApplicationConfiguration.GetUriResouce().MasterData+c.OriginalURL(), nil)
 		if err != nil {
 			return err
 		}
 
-		token, errMdl := model.GetTokenInternal()
-		if errMdl.Error != nil {
-			return errMdl.Error
-		}
 		req.Header.Set("Accept", "application/json")
-		req.Header.Set("Authorization", token)
+		req.Header.Set(constanta.TokenHeaderNameConstanta, c.Locals(constanta.TokenInternalHeaderName).(string))
 
 		client := &http.Client{}
 		resp, err := client.Do(req)
@@ -34,18 +33,14 @@ func masterDataRouter(app fiber.Router) {
 	})
 
 	app.Post("/*", func(c *fiber.Ctx) error {
-		req, err := http.NewRequest("POST", "http://localhost:9092"+c.OriginalURL(), bytes.NewReader(c.Body()))
+		req, err := http.NewRequest("POST", config.ApplicationConfiguration.GetUriResouce().MasterData+c.OriginalURL(), bytes.NewReader(c.Body()))
 		if err != nil {
 			return err
 		}
 
-		token, errMdl := model.GetTokenInternal()
-		if errMdl.Error != nil {
-			return errMdl.Error
-		}
 		req.Header.Set("Accept", "application/json")
 		req.Header.Set("Content-Type", c.Get("Content-Type"))
-		req.Header.Set("Authorization", token)
+		req.Header.Set(constanta.TokenHeaderNameConstanta, c.Locals(constanta.TokenInternalHeaderName).(string))
 
 		client := &http.Client{}
 		resp, err := client.Do(req)
@@ -65,13 +60,9 @@ func masterDataRouter(app fiber.Router) {
 			return err
 		}
 
-		token, errMdl := model.GetTokenInternal()
-		if errMdl.Error != nil {
-			return errMdl.Error
-		}
 		req.Header.Set("Accept", "application/json")
 		req.Header.Set("Content-Type", c.Get("Content-Type"))
-		req.Header.Set("Authorization", token)
+		req.Header.Set(constanta.TokenHeaderNameConstanta, c.Locals(constanta.TokenInternalHeaderName).(string))
 
 		client := &http.Client{}
 		resp, err := client.Do(req)

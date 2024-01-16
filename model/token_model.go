@@ -2,24 +2,25 @@ package model
 
 import (
 	"errors"
-	"github.com/golang-jwt/jwt/v5"
 	"go-oauth/config"
 	"go-oauth/constanta"
 	"time"
+
+	"github.com/golang-jwt/jwt/v5"
 )
 
 type PayloadJWTToken struct {
-	AuthID int64  `json:"auth_id"`
-	Scope  string `json:"scope"`
+	AuthID int64  `json:"uid"`
 	Locale string `json:"locale"`
 	jwt.RegisteredClaims
 }
 
 type PayloadTokenInternal struct {
-	Scope    string `json:"scope"`
-	Locale   string `json:"locale"`
-	ClientID string `json:"client_id"`
-	Valid    bool   `json:"valid"`
+	Locale    string `json:"locale"`
+	UserID    int64  `json:"uid"`
+	CompanyID int64  `json:"cid"`
+	BranchID  int64  `json:"bid"`
+	Valid     bool   `json:"valid"`
 	jwt.RegisteredClaims
 }
 
@@ -36,7 +37,8 @@ func (input JWTToken) GenerateToken(payload jwt.Claims) (string, ErrorModel) {
 }
 
 type ValueRedis struct {
-	Scope map[string]map[string][]string `json:"scp"`
+	CompanyID int64 `json:"cpid"`
+	BranchID  int64 `json:"brid"`
 }
 
 func (input JWTToken) ParsingJwtTokenInternal(jwtTokenStr string) (result PayloadTokenInternal, errMdl ErrorModel) {
@@ -73,14 +75,15 @@ func (input JWTToken) ParsingJwtToken(jwtTokenStr string) (result PayloadJWTToke
 	return
 }
 
-func GetTokenInternal() (string, ErrorModel) {
+func GetTokenInternal(userID, companyID, branchID int64) (string, ErrorModel) {
 	expJwtCode := time.Now().Add(constanta.ExpiredJWTCodeConstanta)
 	jwtToken, errMdl := JWTToken{}.GenerateToken(
 		PayloadTokenInternal{
-			ClientID: "",
-			Scope:    "",
-			Locale:   "en-US",
-			Valid:    true,
+			Locale:    "en-US",
+			UserID:    userID,
+			CompanyID: companyID,
+			BranchID:  branchID,
+			Valid:     true,
 			RegisteredClaims: jwt.RegisteredClaims{
 				IssuedAt:  jwt.NewNumericDate(time.Now()),
 				ExpiresAt: jwt.NewNumericDate(expJwtCode),

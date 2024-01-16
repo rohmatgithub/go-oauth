@@ -2,12 +2,13 @@ package router
 
 import (
 	"fmt"
+	"go-oauth/config"
+	"go-oauth/endpoint"
+
 	"github.com/goccy/go-json"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/cors"
 	"github.com/gofiber/fiber/v2/middleware/requestid"
-	"go-oauth/config"
-	"go-oauth/endpoint"
 )
 
 func Router() error {
@@ -51,9 +52,11 @@ func Router() error {
 
 	oauth := app.Group("/v1/oauth")
 	credentialsRouter(oauth)
+	usersRouter(oauth)
 
 	master := app.Group("/v1/master", endpoint.MiddlewareOtherService)
 	masterDataRouter(master)
+
 	app.Use(NotFoundHandler)
 	return app.Listen(fmt.Sprintf(":%d", config.ApplicationConfiguration.GetServerConfig().Port))
 }

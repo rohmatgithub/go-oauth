@@ -18,7 +18,7 @@ CREATE TABLE IF NOT EXISTS users
     email           VARCHAR(100),
     phone           VARCHAR(20),
     status			CHAR(1),
-    locale			VARCHAR(3),
+    locale			VARCHAR(5),
     client_id 		VARCHAR(256) NOT NULL,
     person_profile_id INTEGER,
     created_by      INTEGER,
@@ -117,6 +117,14 @@ CREATE TABLE IF NOT EXISTS auth_token (
   expired_time 	    INTEGER,
   value_token 			TEXT,
   created_at		TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS access_permissions
+(
+    user_id         BIGINT PRIMARY KEY,
+    company_id      BIGINT NOT NULL,
+    branch_id       BIGINT[] NOT NULL,
+    is_admin        boolean NOT NULL DEFAULT FALSE
 );
 
 INSERT INTO users

@@ -3,9 +3,6 @@ package router
 import (
 	"context"
 	"fmt"
-	"github.com/gofiber/fiber/v2"
-	"github.com/gofiber/fiber/v2/log"
-	"github.com/gofiber/fiber/v2/middleware/adaptor"
 	"go-oauth/common"
 	"go-oauth/config"
 	"go-oauth/constanta"
@@ -14,6 +11,10 @@ import (
 	"os"
 	"strconv"
 	"strings"
+
+	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v2/log"
+	"github.com/gofiber/fiber/v2/middleware/adaptor"
 )
 
 func middleware(c *fiber.Ctx) error {

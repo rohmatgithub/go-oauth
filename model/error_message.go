@@ -31,6 +31,10 @@ func GenerateInvalidRequestError(causedBy error) ErrorModel {
 	return GenerateErrorModel(400, "E-4-AUT-DTO-004", causedBy)
 }
 
+func GenerateFailedValidate() ErrorModel {
+	return GenerateErrorModel(400, "E-4-MDB-DTO-005", nil)
+}
+
 // ====================== ERROR SERVICE  ===================
 
 func GenerateUnauthorizedClientError() ErrorModel {

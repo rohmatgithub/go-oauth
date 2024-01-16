@@ -20,6 +20,7 @@ const ApplicationContextConstanta = "application_context"
 const HeaderClientIdKey = "X-Client-ID"
 const HeaderClientSecretKey = "X-Client-Secret"
 const HeaderDestResourceKey = "X-Dest-Resource"
+const TokenInternalHeaderName = "X-Token-Internal"
 
 // --------------------------------- Expired Time Constanta ---------------------------------------------------------
 const ExpiredAuthCodeConstanta = 10 * time.Minute
@@ -29,3 +30,8 @@ const DefaultApplicationsLanguage = "en-US"
 
 const GrantTypeClientCredentials = "client_credentials"
 const GrantTypePassword = "password"
+
+const LanguageEn = "en-US"
+const LanguageId = "id-ID"
+const ParamID = "ID"
+const FormatDateGeneral = "2006-01-02T15:04:05Z"

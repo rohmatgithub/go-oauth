@@ -52,5 +52,9 @@
   },
   "jwt": {
     "token_key": "ini juga gak di encrypt"
+  },
+  "uri_resource": {
+    "master_data": "http://localhost:9092",
+    "transaction": ""
   }
 }

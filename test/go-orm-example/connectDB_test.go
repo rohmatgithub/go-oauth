@@ -1,9 +1,10 @@
 package go_orm_example
 
 import (
-	"github.com/stretchr/testify/assert"
 	go_orm_example "go-oauth/go-orm-example"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
 )
 
 func TestConnectDB(t *testing.T) {

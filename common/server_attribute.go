@@ -3,13 +3,14 @@ package common
 import (
 	"database/sql"
 	"fmt"
+	"go-oauth/config"
+	"io"
+	"os"
+
 	"github.com/gofiber/fiber/v2/log"
 	"github.com/nicksnyder/go-i18n/v2/i18n"
 	"github.com/redis/go-redis/v9"
-	"go-oauth/config"
 	"gorm.io/gorm"
-	"io"
-	"os"
 )
 
 var (
@@ -19,6 +20,8 @@ var (
 	RedisClient               *redis.Client
 	ErrorBundle               *i18n.Bundle
 	ConstantaBundle           *i18n.Bundle
+	CommonBundle              *i18n.Bundle
+	Validation                ValidationInterface
 )
 
 //type logWriter struct {

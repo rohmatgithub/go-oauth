@@ -11,6 +11,7 @@ type DevelopmentConfig struct {
 	DirFileResource       DirFileResource `json:"dir_file_resource"`
 	Discord               Discord         `json:"discord"`
 	Jwt                   Jwt             `json:"jwt"`
+	UriResource           UriResource     `json:"uri_resource"`
 }
 
 func (input DevelopmentConfig) GetServerConfig() Server {
@@ -52,4 +53,8 @@ func (input DevelopmentConfig) GetJwtConfig() Jwt {
 	//	TokenInternalKey: "",
 	//}
 	return input.Jwt
+}
+
+func (input DevelopmentConfig) GetUriResouce() UriResource {
+	return input.UriResource
 }

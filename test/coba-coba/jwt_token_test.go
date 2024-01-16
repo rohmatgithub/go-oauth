@@ -13,5 +13,5 @@ func TestParsingJwtToken(t *testing.T) {
 	if err.Error != nil {
 		t.Fatal(err)
 	}
-	fmt.Println(result.ClientID)
+	fmt.Println(result.UserID)
 }

@@ -13,10 +13,16 @@ require (
 	github.com/nicksnyder/go-i18n/v2 v2.3.0
 	github.com/redis/go-redis/v9 v9.2.1
 	github.com/rubenv/sql-migrate v1.5.2
-	github.com/stretchr/testify v1.8.1
+	github.com/stretchr/testify v1.8.4
 	github.com/tkanos/gonfig v0.0.0-20210106201359-53e13348de2f
 	gorm.io/driver/postgres v1.5.2
 	gorm.io/gorm v1.25.4
+)
+
+require (
+	github.com/gabriel-vasile/mimetype v1.4.2 // indirect
+	github.com/leodido/go-urn v1.2.4 // indirect
+	golang.org/x/net v0.9.0 // indirect
 )
 
 require (
@@ -25,6 +31,9 @@ require (
 	github.com/dgryski/go-rendezvous v0.0.0-20200823014737-9f7001d12a5f // indirect
 	github.com/ghodss/yaml v1.0.0 // indirect
 	github.com/go-gorp/gorp/v3 v3.1.0 // indirect
+	github.com/go-playground/locales v0.14.1
+	github.com/go-playground/universal-translator v0.18.1
+	github.com/go-playground/validator/v10 v10.17.0
 	github.com/gobuffalo/logger v1.0.6 // indirect
 	github.com/gobuffalo/packd v1.0.1 // indirect
 	github.com/jackc/pgpassfile v1.0.0 // indirect

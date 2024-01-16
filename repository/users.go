@@ -15,6 +15,23 @@ type Users struct {
 	PersonProfileID sql.NullInt64
 	AuthClient      AuthClient    `gorm:"foreignKey:ClientID"`
 	PersonProfile   PersonProfile `gorm:"foreignKey:PersonProfileID"`
+	AbstractModel
+}
+
+type UsersDetail struct {
+	ID              sql.NullInt64 `gorm:"primaryKey"`
+	Username        sql.NullString
+	Password        sql.NullString
+	Salt            sql.NullString
+	Email           sql.NullString
+	Phone           sql.NullString
+	Status          sql.NullString
+	Locale          sql.NullString
+	ClientID        sql.NullString
+	PersonProfileID sql.NullInt64
+	AuthClient      AuthClient    `gorm:"foreignKey:ClientID"`
+	PersonProfile   PersonProfile `gorm:"foreignKey:PersonProfileID"`
 	ClientResource  ClientResource
+	CompanyID       sql.NullInt64
 	AbstractModel
 }

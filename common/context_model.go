@@ -7,8 +7,10 @@ type ContextModel struct {
 }
 
 type AuthAccessTokenModel struct {
-	ResourceUserID int64  `json:"rid"`
-	Scope          string `json:"scp"`
-	ClientID       string `json:"cid"`
-	Locale         string `json:"lang"`
+	ResourceUserID int64 `json:"rid"`
+	CompanyID      int64 `json:"cpid"`
+	BranchID       int64 `json:"brid"`
+	// Scope          string `json:"scp"`
+	// ClientID       string `json:"cid"`
+	Locale string `json:"lang"`
 }

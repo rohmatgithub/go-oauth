@@ -4,9 +4,6 @@ import (
 	context2 "context"
 	"database/sql"
 	"encoding/json"
-	"github.com/gofiber/fiber/v2"
-	"github.com/gofiber/fiber/v2/log"
-	"github.com/golang-jwt/jwt/v5"
 	"go-oauth/common"
 	"go-oauth/constanta"
 	"go-oauth/dao"
@@ -15,6 +12,10 @@ import (
 	"go-oauth/repository"
 	"go-oauth/util"
 	"time"
+
+	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v2/log"
+	"github.com/golang-jwt/jwt/v5"
 )
 
 func (cs credentialsService) ClientCredentialsService(c *fiber.Ctx, _ *common.ContextModel) (payload out.Payload, errMdl model.ErrorModel) {
@@ -57,10 +58,8 @@ func (cs credentialsService) ClientCredentialsService(c *fiber.Ctx, _ *common.Co
 	expJwtCode := time.Now().Add(constanta.ExpiredJWTCodeConstanta)
 	jwtToken, errMdl := model.JWTToken{}.GenerateToken(
 		model.PayloadTokenInternal{
-			ClientID: repo.ClientID.String,
-			Scope:    "",
-			Locale:   "en-US",
-			Valid:    true,
+			Locale: "en-US",
+			Valid:  true,
 			RegisteredClaims: jwt.RegisteredClaims{
 				IssuedAt:  jwt.NewNumericDate(time.Now()),
 				ExpiresAt: jwt.NewNumericDate(expJwtCode),
@@ -86,7 +85,8 @@ func (cs credentialsService) ClientCredentialsService(c *fiber.Ctx, _ *common.Co
 	}()
 
 	valueRedis := model.ValueRedis{
-		Scope: scope,
+		CompanyID: 0,
+		BranchID:  0,
 	}
 	valueToken := util.JsonToString(valueRedis)
 	authTokenRepo := repository.AuthToken{

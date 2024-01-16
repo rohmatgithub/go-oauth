@@ -3,10 +3,6 @@ package endpoint
 import (
 	"context"
 	"encoding/json"
-	"fmt"
-	"github.com/gofiber/fiber/v2"
-	"github.com/gofiber/fiber/v2/log"
-	"github.com/gofiber/fiber/v2/middleware/adaptor"
 	"go-oauth/common"
 	"go-oauth/config"
 	"go-oauth/constanta"
@@ -17,6 +13,10 @@ import (
 	"runtime/debug"
 	"strings"
 	"time"
+
+	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v2/log"
+	"github.com/gofiber/fiber/v2/middleware/adaptor"
 )
 
 type AbstractEndpoint struct {
@@ -61,10 +61,8 @@ func (ae AbstractEndpoint) serve(c *fiber.Ctx,
 	if errMdl.Error != nil {
 		generateEResponseError(c, &contextModel, &payload, errMdl)
 	} else {
-		payload.Status = out.StatusPayload{
-			Success: true,
-			Code:    "OK",
-		}
+		payload.Status.Success = true
+		payload.Status.Code = "OK"
 	}
 	return
 }
@@ -77,11 +75,10 @@ func generateEResponseError(c *fiber.Ctx, ctxModel *common.ContextModel, payload
 	}
 	// write failed
 	c.Status(errMdl.Code)
-	payload.Status = out.StatusPayload{
-		Success: false,
-		Code:    errMdl.Error.Error(),
-		Message: common.GenerateI18NErrorMessage(errMdl, ctxModel.AuthAccessTokenModel.Locale),
-	}
+	payload.Status.Success = false
+	payload.Status.Code = errMdl.Error.Error()
+	payload.Status.Message = common.GenerateI18NErrorMessage(errMdl, ctxModel.AuthAccessTokenModel.Locale)
+
 }
 
 func (ae AbstractEndpoint) EndpointWhiteList(c *fiber.Ctx, runFunc func(*fiber.Ctx, *common.ContextModel) (out.Payload, model.ErrorModel)) error {
@@ -97,7 +94,7 @@ func (ae AbstractEndpoint) EndpointClientCredentials(c *fiber.Ctx, runFunc func(
 	validateFunc := func(cx *fiber.Ctx, contextModel *common.ContextModel) (errMdl model.ErrorModel) {
 		// cek token expired
 		tokenStr := cx.Get(constanta.TokenHeaderNameConstanta)
-		destresource := cx.Get(constanta.HeaderDestResourceKey)
+		// destresource := cx.Get(constanta.HeaderDestResourceKey)
 		_, errMdl = model.JWTToken{}.ParsingJwtTokenInternal(tokenStr)
 		if errMdl.Error != nil {
 			return
@@ -128,13 +125,13 @@ func (ae AbstractEndpoint) EndpointClientCredentials(c *fiber.Ctx, runFunc func(
 			errMdl = model.GenerateUnauthorizedClientError()
 			return
 		}
-		// validate scope token
-		scope := valueModel.Scope[destresource]
-		log.Debug(fmt.Sprintf("dest-resource : [%s], value-scope : [%v]", destresource, scope))
-		if scope == nil {
-			errMdl = model.GenerateUnauthorizedClientError()
-			return
-		}
+		// // validate scope token
+		// scope := valueModel.Scope[destresource]
+		// log.Debug(fmt.Sprintf("dest-resource : [%s], value-scope : [%v]", destresource, scope))
+		// if scope == nil {
+		// 	errMdl = model.GenerateUnauthorizedClientError()
+		// 	return
+		// }
 		return
 	}
 
@@ -148,7 +145,7 @@ func validatePermissionUser(c *fiber.Ctx, contextModel *common.ContextModel) (er
 		return model.GenerateUnauthorizedClientError()
 	}
 	// cek token expired
-	_, errMdl = model.JWTToken{}.ParsingJwtToken(tokenStr)
+	parsedToken, errMdl := model.JWTToken{}.ParsingJwtToken(tokenStr)
 	if errMdl.Error != nil {
 		return
 	}
@@ -161,7 +158,7 @@ func validatePermissionUser(c *fiber.Ctx, contextModel *common.ContextModel) (er
 		valueToken = redis.Val()
 	}
 
-	if valueToken == strings.TrimSpace(valueToken) {
+	if strings.TrimSpace(valueToken) == "" {
 		// get to db
 		var authTokenDB repository.AuthToken
 		authTokenDB, errMdl = dao.AuthTokenDao.GetByToken(tokenStr)
@@ -178,6 +175,11 @@ func validatePermissionUser(c *fiber.Ctx, contextModel *common.ContextModel) (er
 		errMdl = model.GenerateUnauthorizedClientError()
 		return
 	}
+
+	contextModel.AuthAccessTokenModel.ResourceUserID = parsedToken.AuthID
+	contextModel.AuthAccessTokenModel.CompanyID = valueModel.CompanyID
+	contextModel.AuthAccessTokenModel.BranchID = valueModel.BranchID
+
 	return
 }
 func (ae AbstractEndpoint) EndpointJwtToken(c *fiber.Ctx, runFunc func(*fiber.Ctx, *common.ContextModel) (out.Payload, model.ErrorModel)) error {
@@ -222,6 +224,15 @@ func MiddlewareOtherService(c *fiber.Ctx) (err error) {
 		generateEResponseError(c, &contextModel, &payload, errMdl)
 		return
 	}
+
+	tokenInternal, errMdl := model.GetTokenInternal(contextModel.AuthAccessTokenModel.ResourceUserID,
+		contextModel.AuthAccessTokenModel.CompanyID, contextModel.AuthAccessTokenModel.BranchID)
+	if errMdl.Error != nil {
+		generateEResponseError(c, &contextModel, &payload, errMdl)
+		return
+	}
+
+	c.Locals(constanta.TokenInternalHeaderName, tokenInternal)
 
 	return c.Next()
 }

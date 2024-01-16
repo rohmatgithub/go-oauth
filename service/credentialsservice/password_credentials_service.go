@@ -3,9 +3,6 @@ package credentialsservice
 import (
 	context2 "context"
 	"database/sql"
-	"github.com/gofiber/fiber/v2"
-	"github.com/gofiber/fiber/v2/log"
-	"github.com/golang-jwt/jwt/v5"
 	"go-oauth/common"
 	"go-oauth/constanta"
 	"go-oauth/dao"
@@ -15,6 +12,10 @@ import (
 	"go-oauth/repository"
 	"go-oauth/util"
 	"time"
+
+	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v2/log"
+	"github.com/golang-jwt/jwt/v5"
 )
 
 func (cs credentialsService) VerifyService(c *fiber.Ctx, contextModel *common.ContextModel) (payload out.Payload, errMdl model.ErrorModel) {
@@ -61,7 +62,6 @@ func validateUsername(dtoIn in.PasswordCredentialsIn, resourceID string) (token 
 	jwtToken, errMdl := model.JWTToken{}.GenerateToken(
 		model.PayloadJWTToken{
 			AuthID: userDB.ID.Int64,
-			Scope:  "",
 			Locale: userDB.Locale.String,
 			RegisteredClaims: jwt.RegisteredClaims{
 				IssuedAt:  jwt.NewNumericDate(time.Now()),
@@ -89,7 +89,8 @@ func validateUsername(dtoIn in.PasswordCredentialsIn, resourceID string) (token 
 	}()
 
 	valueRedis := model.ValueRedis{
-		Scope: nil,
+		CompanyID: userDB.CompanyID.Int64,
+		BranchID:  0,
 	}
 	valueToken := util.JsonToString(valueRedis)
 	authTokenRepo := repository.AuthToken{

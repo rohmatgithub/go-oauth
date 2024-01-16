@@ -19,6 +19,7 @@ type Configuration interface {
 	GetFileResourceDir() DirFileResource
 	GetDiscordConfig() Discord
 	GetJwtConfig() Jwt
+	GetUriResouce() UriResource
 }
 
 type Server struct {
@@ -78,6 +79,11 @@ type Discord struct {
 
 type Jwt struct {
 	TokenKey string `json:"token_key" envconfig:"$(AUTH_JWT_TOKEN_KEY)"`
+}
+
+type UriResource struct {
+	MasterData  string `json:"master_data"`
+	Transaction string `json:"transaction"`
 }
 
 func GenerateConfiguration(arguments string) {
