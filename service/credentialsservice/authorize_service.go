@@ -36,7 +36,7 @@ func (cs credentialsService) GetBranchID(c *fiber.Ctx, ctxModel *common.ContextM
 	// Create an HTTP client
 	client := &http.Client{}
 
-	tokenInternal, errMdl := model.GetTokenInternal(dataDB.UserID, dataDB.CompanyID, 0)
+	tokenInternal, errMdl := model.GetTokenInternal(dataDB.UserID, dataDB.CompanyID)
 	if errMdl.Error != nil {
 		return
 	}
@@ -123,7 +123,7 @@ func (cs credentialsService) SelectBranchID(c *fiber.Ctx, ctxModel *common.Conte
 		errMdl = model.GenerateUnauthorizedClientError()
 		return
 	}
-	valueModel.BranchID = dtoIn.BranchID
+	// valueModel.BranchID = dtoIn.BranchID
 
 	// update value redis
 	redisStatus := common.RedisClient.Set(ctx, tokenStr, util.JsonToString(valueModel), 0)

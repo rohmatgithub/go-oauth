@@ -3,7 +3,9 @@ package credentialsservice
 import (
 	context2 "context"
 	"database/sql"
+	"encoding/json"
 	"go-oauth/common"
+	"go-oauth/config"
 	"go-oauth/constanta"
 	"go-oauth/dao"
 	"go-oauth/dto/in"
@@ -11,6 +13,9 @@ import (
 	"go-oauth/model"
 	"go-oauth/repository"
 	"go-oauth/util"
+	"io"
+	"net/http"
+	"strconv"
 	"time"
 
 	"github.com/gofiber/fiber/v2"
@@ -30,16 +35,17 @@ func (cs credentialsService) VerifyService(c *fiber.Ctx, contextModel *common.Co
 		return
 	}
 
-	token, errMdl := validateUsername(dtoIn, "auth")
+	token, data, errMdl := validateUsername(dtoIn, "auth")
 	if errMdl.Error != nil {
 		return
 	}
 
+	payload.Data = data
 	c.Set(constanta.TokenHeaderNameConstanta, token)
 	return
 }
 
-func validateUsername(dtoIn in.PasswordCredentialsIn, resourceID string) (token string, errMdl model.ErrorModel) {
+func validateUsername(dtoIn in.PasswordCredentialsIn, resourceID string) (token string, data interface{}, errMdl model.ErrorModel) {
 	// get user by username in db
 	userDB, errMdl := dao.UserDao.GetDataByUsername(dtoIn.Username, resourceID)
 	if errMdl.Error != nil {
@@ -90,7 +96,6 @@ func validateUsername(dtoIn in.PasswordCredentialsIn, resourceID string) (token 
 
 	valueRedis := model.ValueRedis{
 		CompanyID: userDB.CompanyID.Int64,
-		BranchID:  0,
 	}
 	valueToken := util.JsonToString(valueRedis)
 	authTokenRepo := repository.AuthToken{
@@ -112,5 +117,47 @@ func validateUsername(dtoIn in.PasswordCredentialsIn, resourceID string) (token 
 
 	}
 
-	return jwtToken, model.ErrorModel{}
+	// get company from master
+	// Create an HTTP client
+	client := &http.Client{}
+
+	tokenInternal, errMdl := model.GetTokenInternal(userDB.ID.Int64, userDB.CompanyID.Int64)
+	if errMdl.Error != nil {
+		return
+	}
+	uri := config.ApplicationConfiguration.GetUriResouce().MasterData + "/v1/master/company/" + strconv.Itoa(int(userDB.CompanyID.Int64))
+	req, err := http.NewRequest("GET", uri, nil)
+	if err != nil {
+		log.Error("Error creating request:", err)
+		errMdl = model.GenerateUnknownError(err)
+		return
+	}
+	req.Header.Set("Content-Type", "application/json")
+	req.Header.Set(constanta.TokenHeaderNameConstanta, tokenInternal)
+
+	// Make the request
+	response, err := client.Do(req)
+	if err != nil {
+		log.Error("Error making request:", err)
+		errMdl = model.GenerateUnknownError(err)
+		return
+	}
+	defer response.Body.Close()
+
+	// Read the response body
+	body, err := io.ReadAll(response.Body)
+	if err != nil {
+		log.Error("Error reading response:", err)
+		errMdl = model.GenerateUnknownError(err)
+		return
+	}
+
+	var company out.CompanyResponse
+	err = json.Unmarshal(body, &company)
+	if err != nil {
+		log.Error("Error unmarshalling JSON:", err)
+		errMdl = model.GenerateUnknownError(err)
+		return
+	}
+	return jwtToken, company.Payload.Data, model.ErrorModel{}
 }

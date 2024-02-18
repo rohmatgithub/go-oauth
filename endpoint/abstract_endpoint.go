@@ -178,7 +178,6 @@ func validatePermissionUser(c *fiber.Ctx, contextModel *common.ContextModel) (er
 
 	contextModel.AuthAccessTokenModel.ResourceUserID = parsedToken.AuthID
 	contextModel.AuthAccessTokenModel.CompanyID = valueModel.CompanyID
-	contextModel.AuthAccessTokenModel.BranchID = valueModel.BranchID
 
 	return
 }
@@ -226,7 +225,7 @@ func MiddlewareOtherService(c *fiber.Ctx) (err error) {
 	}
 
 	tokenInternal, errMdl := model.GetTokenInternal(contextModel.AuthAccessTokenModel.ResourceUserID,
-		contextModel.AuthAccessTokenModel.CompanyID, contextModel.AuthAccessTokenModel.BranchID)
+		contextModel.AuthAccessTokenModel.CompanyID)
 	if errMdl.Error != nil {
 		generateEResponseError(c, &contextModel, &payload, errMdl)
 		return

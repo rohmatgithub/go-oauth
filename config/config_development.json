@@ -55,6 +55,6 @@
   },
   "uri_resource": {
     "master_data": "http://localhost:9092",
-    "transaction": ""
+    "transaction": "http://localhost:9093"
   }
 }

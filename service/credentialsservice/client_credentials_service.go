@@ -86,7 +86,6 @@ func (cs credentialsService) ClientCredentialsService(c *fiber.Ctx, _ *common.Co
 
 	valueRedis := model.ValueRedis{
 		CompanyID: 0,
-		BranchID:  0,
 	}
 	valueToken := util.JsonToString(valueRedis)
 	authTokenRepo := repository.AuthToken{

@@ -57,6 +57,9 @@ func Router() error {
 	master := app.Group("/v1/master", endpoint.MiddlewareOtherService)
 	masterDataRouter(master)
 
+	trans := app.Group("/v1/trans", endpoint.MiddlewareOtherService)
+	transactionRouter(trans)
+
 	app.Use(NotFoundHandler)
 	return app.Listen(fmt.Sprintf(":%d", config.ApplicationConfiguration.GetServerConfig().Port))
 }

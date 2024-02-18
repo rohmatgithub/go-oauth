@@ -9,10 +9,10 @@ import (
 	"github.com/gofiber/fiber/v2"
 )
 
-func masterDataRouter(app fiber.Router) {
+func transactionRouter(app fiber.Router) {
 	app.Get("/*", func(c *fiber.Ctx) error {
 
-		req, err := http.NewRequest("GET", config.ApplicationConfiguration.GetUriResouce().MasterData+c.OriginalURL(), nil)
+		req, err := http.NewRequest("GET", config.ApplicationConfiguration.GetUriResouce().Transaction+c.OriginalURL(), nil)
 		if err != nil {
 			return err
 		}
@@ -33,7 +33,7 @@ func masterDataRouter(app fiber.Router) {
 	})
 
 	app.Post("/*", func(c *fiber.Ctx) error {
-		req, err := http.NewRequest("POST", config.ApplicationConfiguration.GetUriResouce().MasterData+c.OriginalURL(), bytes.NewReader(c.Body()))
+		req, err := http.NewRequest("POST", config.ApplicationConfiguration.GetUriResouce().Transaction+c.OriginalURL(), bytes.NewReader(c.Body()))
 		if err != nil {
 			return err
 		}
@@ -55,7 +55,7 @@ func masterDataRouter(app fiber.Router) {
 	})
 
 	app.Put("/*", func(c *fiber.Ctx) error {
-		req, err := http.NewRequest("PUT", config.ApplicationConfiguration.GetUriResouce().MasterData+c.OriginalURL(), bytes.NewReader(c.Body()))
+		req, err := http.NewRequest("PUT", config.ApplicationConfiguration.GetUriResouce().Transaction+c.OriginalURL(), bytes.NewReader(c.Body()))
 		if err != nil {
 			return err
 		}
