@@ -88,11 +88,11 @@ type UriResource struct {
 
 func GenerateConfiguration(arguments string) {
 	var err error
-	enviName := os.Getenv("auth-config")
-	fmt.Println(enviName)
+	// enviName := os.Getenv("auth-config")
+	// fmt.Println(enviName)
 	if arguments == "development" {
 		temp := DevelopmentConfig{}
-		err = gonfig.GetConf(enviName+"/config_development.json", &temp)
+		err = gonfig.GetConf("./config/config_development.json", &temp)
 		ApplicationConfiguration = &temp
 		//var filename = "config_production.json"
 		//err = envconfig.Process(enviName+"/"+filename, &temp)
