@@ -84,6 +84,7 @@ type Jwt struct {
 type UriResource struct {
 	MasterData  string `json:"master_data"`
 	Transaction string `json:"transaction"`
+	Report      string `json:"report"`
 }
 
 func GenerateConfiguration(arguments string) {
